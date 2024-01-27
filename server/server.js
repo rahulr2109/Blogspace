@@ -26,7 +26,7 @@ let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for pass
 server.use(express.json());
 server.use(
   cors({
-    origin: ["https://blogging-web-app-frontend.vercel.app/"],
+    origin: ["https://blogging-web-app-frontend.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })

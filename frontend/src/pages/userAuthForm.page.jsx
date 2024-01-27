@@ -21,11 +21,12 @@ const UserAuthForm = ({ type }) => {
     axios
       .post(import.meta.env.VITE_SERVER_DOMAIN + serverRoute, formData)
       .then((res) => {
+        toast.success("Successfull logged In");
         storeInSession("user", JSON.stringify(res.data));
         setUserAuth(res.data);
       })
       .catch(({ response }) => {
-        //toast.error(response.data.error);
+        toast.error(response.data.error);
         console.log(response);
       });
   };

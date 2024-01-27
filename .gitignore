@@ -1,0 +1,8 @@
+server/node_modules
+server/.env
+server/google_auth_privatekey.js
+server/requests.rest
+frontend/node_modules
+frontend/.env
+frontend/README.md
+.vite

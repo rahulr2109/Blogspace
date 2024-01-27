@@ -1,17 +1,15 @@
 {
-  "name": "Blogging Web-App",
-  "version": 2,
-  "routes": [
-    {
-      "src": "/api/*",
-      "dest": "/api/index.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ],
-  "env": {
-    "API_KEY": "your-api-key"
+    "version": 2,
+    "builds": [
+      {
+        "src": "server.js", 
+        "use": "@vercel/node"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "server.js"
+      }
+    ]
   }
-}

@@ -6,7 +6,7 @@ import { nanoid } from "nanoid";
 import jwt from "jsonwebtoken";
 import cors from "cors";
 import admin from "firebase-admin";
-import serviceAccountKey from "./reactjs-blog-website-82409-firebase-adminsdk-mfwmk-8d7965133f.js";
+import privateKey from "./google-auth-key.js";
 import { getAuth } from "firebase-admin/auth";
 
 //schema below
@@ -17,7 +17,7 @@ const server = express();
 let PORT = 3000;
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccountKey),
+  credential: admin.credential.cert(privateKey),
 });
 
 let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email

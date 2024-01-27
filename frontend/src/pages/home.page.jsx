@@ -9,6 +9,7 @@ import { activeTabRef } from "../components/inpage-navigation.component";
 import NoDataMessage from "../components/nodata.component";
 import { filterPaginationData } from "../common/filter-pagination-data";
 import LoadMoreDataBtn from "../components/load-more.component";
+import { toast, Toaster } from "react-hot-toast";
 
 const HomePage = () => {
   let [blogs, setBlogs] = useState(null);
@@ -119,6 +120,7 @@ const HomePage = () => {
   return (
     <AnimationWrapper>
       <section className="h-cover flex justify-center gap-10">
+        <Toaster />
         {/* latest blogs*/}
         <div className="w-full">
           <InPageNavigation

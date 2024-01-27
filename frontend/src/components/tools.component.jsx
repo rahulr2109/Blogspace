@@ -15,12 +15,16 @@ const uploadImageByUrl = (e) => {
     }
   });
 
-  return link.then((url) => {
-    return {
-      success: 1,
-      file: { url },
-    };
-  });
+  return link
+    .then((url) => {
+      return {
+        success: 1,
+        file: { url },
+      };
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 const uploadImageByFile = (e) => {

@@ -8,6 +8,7 @@ import HomePage from "./pages/home.page";
 import SearchPage from "./pages/search.page";
 import PageNotFound from "./pages/404.page";
 import ProfilePage from "./pages/profile.page";
+import BlogPage from "./pages/blog.page";
 
 export const UserContext = createContext({});
 
@@ -32,6 +33,7 @@ const App = () => {
           <Route path="signup" element={<UserAuthForm type="sign-up" />} />
           <Route path="search/:query" element={<SearchPage />} />
           <Route path="user/:id" element={<ProfilePage />} />
+          <Route path="blog/:blog_id" element={<BlogPage />} />
           <Route path="*" element={<PageNotFound />} />
         </Route>
       </Routes>

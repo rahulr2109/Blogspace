@@ -5,7 +5,7 @@ import { EditorContext } from "../pages/editor.pages";
 import Tag from "./tags.component";
 import axios from "axios";
 import { UserContext } from "../App";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const PublishForm = () => {
   let {
@@ -23,6 +23,8 @@ const PublishForm = () => {
 
   let characterLimit = 200;
   let tagLimit = 10;
+
+  let { blog_id } = useParams();
 
   const handleCloseEvent = () => {
     setEditorState("editor");
@@ -63,10 +65,9 @@ const PublishForm = () => {
   };
 
   const publishBlog = (e) => {
-    // console.log("hello");
-    // if (e.target.className.includes("disable")) {
-    //   return;
-    // }
+    if (e.target.className.includes("disable")) {
+      return;
+    }
     if (!title.length) {
       return toast.error("Write blog title before publishing");
     }
@@ -80,7 +81,7 @@ const PublishForm = () => {
     }
     let loadingToast = toast.loading("Publishing...");
 
-    // e.target.classList.add("disable");
+    e.target.classList.add("disable");
 
     let blogObj = {
       title,
@@ -94,16 +95,20 @@ const PublishForm = () => {
     //console.log(blogObj);
 
     axios
-      .post(import.meta.env.VITE_SERVER_DOMAIN + "/create-blog", blogObj, {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      })
+      .post(
+        import.meta.env.VITE_SERVER_DOMAIN + "/create-blog",
+        { ...blogObj, id: blog_id },
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        }
+      )
       .then((res) => {
         // e.target.classList.remove("disable");
         toast.dismiss(loadingToast);
         toast.success("Published");
-        console.log(res);
+        //console.log(res);
 
         setTimeout(() => {
           navigate("/");

@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import logo from "../imgs/logo.png";
 import AnimationWrapper from "../common/page-animation";
 import defaultBanner from "../imgs/blog banner.png";
@@ -9,6 +9,7 @@ import EditorJS from "@editorjs/editorjs";
 import { tools } from "./tools.component";
 import axios from "axios";
 import { UserContext } from "../App";
+import { usePresence } from "framer-motion";
 
 const BlogEditor = () => {
   let {
@@ -25,6 +26,8 @@ const BlogEditor = () => {
     userAuth: { access_token },
   } = useContext(UserContext);
 
+  let { blog_id } = useParams();
+
   let navigate = useNavigate();
 
   //useEffect
@@ -33,7 +36,7 @@ const BlogEditor = () => {
       setTextEditor(
         new EditorJS({
           holder: "textEditor",
-          data: content,
+          data: Array.isArray(content) ? content[0] : content,
           tools: tools,
           placeholder: "Let's write an awesome story",
         })
@@ -145,17 +148,23 @@ const BlogEditor = () => {
         };
 
         axios
-          .post(import.meta.env.VITE_SERVER_DOMAIN + "/create-blog", blogObj, {
-            headers: {
-              Authorization: `Bearer ${access_token}`,
-            },
-          })
+          .post(
+            import.meta.env.VITE_SERVER_DOMAIN + "/create-blog",
+            { ...blogObj, id: blog_id },
+            {
+              headers: {
+                Authorization: `Bearer ${access_token}`,
+              },
+            }
+          )
           .then(() => {
             e.target.classList.remove("disable");
             toast.dismiss(loadingToast);
-            toast.success("Saved");
+            //toast.success("Saved");
 
-            setTimeOut(() => {
+            //navigate("/");
+
+            setTimeout(() => {
               navigate("/");
             }, 500);
           })

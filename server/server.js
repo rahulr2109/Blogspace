@@ -7,7 +7,6 @@ import jwt from "jsonwebtoken";
 import cors from "cors";
 import admin from "firebase-admin";
 import { getAuth } from "firebase-admin/auth";
-import serviceAccountKey from "./blogspace-49965-firebase-adminsdk-4xae7-4d6c342649.json" assert { type: "json" };
 
 //schema below
 import User from "./Schema/User.js";
@@ -16,9 +15,21 @@ import Blog from "./Schema/Blog.js";
 const server = express();
 let PORT = 3000;
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccountKey),
-});
+// admin.initializeApp({
+//   credential: admin.credential.cert({
+//     type: process.env.TYPE,
+//     project_id: process.env.PROJECT_ID,
+//     private_key_id: process.env.PRIVATE_KEY_ID,
+//     private_key: process.env.PRIVATE_KEY,
+//     client_email: process.env.CLIENT_EMAIL,
+//     client_id: process.env.CLIENT_ID,
+//     auth_uri: process.env.AUTH_URI,
+//     token_uri: process.env.TOKEN_URI,
+//     auth_provider_x509_cert_url: process.env.AUTH_PROVIDER_X509_CERT_URL,
+//     client_x509_cert_url: process.env.CLIENT_X509_CERT_URL,
+//     universe_domain: process.env.UNIVERSE_DOMAIN,
+//   }),
+// });
 
 let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
 let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password

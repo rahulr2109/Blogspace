@@ -1,7 +1,14 @@
 # Fullstack MERN Blogging Website
 
+# Tech Stack 
+1. React.js
+2. Node.js
+3. Express.js
+4. MongoDB
+5. Tailwind CSS
+6. Editor.js
 
-This website features include -
+# This website features include -
 1. Modern Blog Editor using Editor JS.
 2. Google Authentication for Users
 3. Dynamic Blog Pages on dynamic urls.

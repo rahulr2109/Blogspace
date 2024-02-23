@@ -3,15 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCSIKG13XdEZgtiqT7Svz0dmzG9fXk0-lg",
-  authDomain: "blogspace-49965.firebaseapp.com",
-  projectId: "blogspace-49965",
-  storageBucket: "blogspace-49965.appspot.com",
-  messagingSenderId: "672920698671",
-  appId: "1:672920698671:web:f90278b6b60d91a35febda",
-  measurementId: "G-YH7R4QSDWZ",
-};
+const firebaseConfig = JSON.parse(import.meta.env.VITE_FIREBASE_CONFIG);
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

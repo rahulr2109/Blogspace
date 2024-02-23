@@ -2,7 +2,7 @@ import { useContext } from "react";
 import AnimationWrapper from "../common/page-animation";
 import InputBox from "../components/input.component";
 import googleIcon from "../imgs/google.png";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
 import axios from "axios";
 import { storeInSession } from "../common/session";
@@ -23,7 +23,6 @@ const UserAuthForm = ({ type }) => {
       .then((res) => {
         storeInSession("user", JSON.stringify(res.data));
         setUserAuth(res.data);
-
         setTimeout(() => {
           toast.success("Login successfull");
         }, 1000);
@@ -80,11 +79,12 @@ const UserAuthForm = ({ type }) => {
 
     authWithGoogle()
       .then((user) => {
+        console.log(user);
         let serverRoute = "/google-auth";
         let formData = {
           access_token: user.accessToken,
         };
-        console.log(user.accessToken);
+        //console.log(user.accessToken);
         userAuthThroughServer(serverRoute, formData);
       })
       .catch((err) => {
@@ -140,6 +140,7 @@ const UserAuthForm = ({ type }) => {
             <p>or</p>
             <hr className="w-1/2 border-black" />
           </div>
+
           <button
             className="btn-dark flex items-center justify-center gap-4 w-[90%] center"
             onClick={handleGoogleAuth}
@@ -147,6 +148,7 @@ const UserAuthForm = ({ type }) => {
             <img src={googleIcon} className="w-5" />
             continue with google
           </button>
+
           {type == "sign-in" ? (
             <p className="mt-6 text-dark-grey text-xl text-center">
               Don't have an account ?

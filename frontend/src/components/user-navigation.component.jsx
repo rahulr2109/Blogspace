@@ -13,6 +13,7 @@ const UserNavigationPanel = () => {
   const signOutUser = () => {
     removeFromSession("user");
     setUserAuth({ access_token: null });
+    console.log("logged out");
   };
 
   return (

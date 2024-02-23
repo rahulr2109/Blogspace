@@ -6,8 +6,8 @@ import { nanoid } from "nanoid";
 import jwt from "jsonwebtoken";
 import cors from "cors";
 import admin from "firebase-admin";
-import privateKey from "./google-auth-key.js";
 import { getAuth } from "firebase-admin/auth";
+import serviceAccountKey from "./blogspace-49965-firebase-adminsdk-4xae7-4d6c342649.json" assert { type: "json" };
 
 //schema below
 import User from "./Schema/User.js";
@@ -17,7 +17,7 @@ const server = express();
 let PORT = 3000;
 
 admin.initializeApp({
-  credential: admin.credential.cert(privateKey),
+  credential: admin.credential.cert(serviceAccountKey),
 });
 
 let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
@@ -175,6 +175,7 @@ server.post("/google-auth", async (req, res) => {
     .verifyIdToken(access_token)
     .then(async (decodedUser) => {
       let { email, name, picture } = decodedUser;
+
       picture = picture.replace("s96-c", "s384-c");
 
       let user = await User.findOne({ "personal_info.email": email })
@@ -199,11 +200,10 @@ server.post("/google-auth", async (req, res) => {
       } else {
         //sign up
         let username = await generateUsername(email);
-        user = new user({
+        user = new User({
           personal_info: {
             fullname: name,
             email,
-            profile_img: picture,
             username,
           },
           google_auth: true,

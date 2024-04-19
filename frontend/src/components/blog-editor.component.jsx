@@ -52,7 +52,7 @@ const BlogEditor = () => {
       data.append("file", img);
       data.append("upload_preset", "blogging app");
       data.append("cloud_name", "dccadxaam");
-      fetch("https://api.cloudinary.com/v1_1/dccadxaam/image/upload", {
+      fetch(process.env.VITE_CLOUD_CONFIG, {
         method: "post",
         body: data,
       })

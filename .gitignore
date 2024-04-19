@@ -2,7 +2,12 @@ server/node_modules
 server/.env
 server/google_auth_privatekey.js
 server/requests.rest
+server/Dockerfile
+server/.dockerignore
 frontend/node_modules
 frontend/.env
 frontend/README.md
+frontend/Dockerfile
+frontend/.dockerignore
+docker-compose.yml
 .vite

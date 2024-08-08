@@ -48,11 +48,14 @@ const BlogEditor = () => {
     if (img) {
       let loadingToast = toast.loading("Uploading...");
 
+      const VITE_CLOUD_CONFIG = import.meta.env.VITE_CLOUD_CONFIG;
+
+
       const data = new FormData();
       data.append("file", img);
       data.append("upload_preset", "blogging app");
       data.append("cloud_name", "dccadxaam");
-      fetch(process.env.VITE_CLOUD_CONFIG, {
+      fetch(VITE_CLOUD_CONFIG, {
         method: "post",
         body: data,
       })

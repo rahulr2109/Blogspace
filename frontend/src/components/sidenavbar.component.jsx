@@ -35,7 +35,7 @@ const SideNavBar = () => {
     <>
       <section className="relative flex gap-10 py-0 max-md:flex-col">
 
-        <div className="sticky top-[80px] z-50">
+        <div className="sticky top-[80px] z-30">
 
           <div className="md:hidden bg-white py-1 border-b border-grey flex flex-norap overflow-x-auto">
 
@@ -44,7 +44,7 @@ const SideNavBar = () => {
             </button>
 
             <button ref={pageStateTab} className="p-5 capitalize">
-              {page}
+              {pageState}
             </button>
 
             <hr ref={activeTabLine} className="absolute botton-0 duration-500" />

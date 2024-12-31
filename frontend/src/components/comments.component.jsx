@@ -15,12 +15,12 @@ export const fetchComments = async ({
   let res;
 
   await axios
-    .post(import.meta.env.VITE_SERVER_DOMAIN + "/get-blog-comments", {
+    .post(import.meta.env.VITE_SERVER_DOMAIN + "/api/comment/get-blog-comments", {
       blog_id,
       skip,
     })
     .then((comment) => {
-      console.log(comment, "Rahul");
+      //console.log(comment, "Rahul");
       let data = comment.data;
       data.map((comment) => {
         comment.childrenLevel = 0;

@@ -41,7 +41,7 @@ const CommentField = ({
 
     axios
       .post(
-        import.meta.env.VITE_SERVER_DOMAIN + "/add-comment",
+        import.meta.env.VITE_SERVER_DOMAIN + "/api/comment/add-comment",
         { _id, comment, blog_author, replying_to: replyingTo },
         {
           headers: {

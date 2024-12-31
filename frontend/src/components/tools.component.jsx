@@ -3,48 +3,59 @@ import List from "@editorjs/list";
 import Image from "@editorjs/image";
 import Header from "@editorjs/header";
 import Quote from "@editorjs/quote";
-import Marker from "@editorjs/marker";
+import Marker from '@editorjs/marker';
 import InlineCode from "@editorjs/inline-code";
+import Link from "@editorjs/link"; 
 
-const uploadImageByUrl = (e) => {
-  let link = new Promise((resolve, reject) => {
-    try {
-      resolve(e);
-    } catch (err) {
-      reject(err);
-    }
-  });
 
-  return link
-    .then((url) => {
-      return {
-        success: 1,
-        file: { url },
-      };
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+const uploadImageByUrl = async (url) => {
+  try {
+    return {
+      success: 1,
+      file: { url },
+    };
+  } catch (error) {
+    console.error("Error uploading image by URL:", error);
+    return {
+      success: 0,
+      message: "Failed to upload image by URL",
+    };
+  }
 };
 
-const uploadImageByFile = (e) => {
+const uploadImageByFile = async (file) => {
   const data = new FormData();
-  data.append("file", e);
+  data.append("file", file);
   data.append("upload_preset", "blogging app");
   data.append("cloud_name", "dccadxaam");
 
-  return fetch("https://api.cloudinary.com/v1_1/dccadxaam/image/upload", {
-    method: "post",
-    body: data,
-  })
-    .then((res) => res.json())
-    .then((data) => data.url.toString())
-    .then((url) => {
-      return {
-        success: 1,
-        file: { url },
-      };
-    });
+  try {
+    const response = await fetch(
+      "https://api.cloudinary.com/v1_1/dccadxaam/image/upload",
+      {
+        method: "POST",
+        body: data,
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to upload image to Cloudinary");
+    }
+
+    const result = await response.json();
+    const url = result.url.toString();
+
+    return {
+      success: 1,
+      file: { url },
+    };
+  } catch (error) {
+    console.error("Error uploading image by file:", error);
+    return {
+      success: 0,
+      message: "Failed to upload image by file",
+    };
+  }
 };
 
 export const tools = {
@@ -75,5 +86,12 @@ export const tools = {
     inlineToolbar: true,
   },
   marker: Marker,
-  InlineCode: InlineCode,
+  inlineCode: InlineCode,
+  
+  // Link tool added
+  link: {
+    class: Link,
+    inlineToolbar: true,
+  },
 };
+

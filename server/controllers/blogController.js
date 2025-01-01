@@ -68,33 +68,27 @@ const fetchAllLatestBlogsCount = async (req, res) => {
   }
 };
 
+
 const searchBlogs = async (req, res) => {
-  const { tag, page, author, query, limit, eliminate_blog } = req.body;
+  const { tag, page = 1, author, query, limit, eliminate_blog } = req.body;
 
-  let findQuery;
-  if (tag) {
-      findQuery = { tags: tag, draft: false, blog_id: { $ne: eliminate_blog } };
-  } else if (query) {
-      findQuery = { draft: false, title: new RegExp(query, "i") };
-  } else if (author) {
-      findQuery = { draft: false, author };
-  }
+  let findQuery = { draft: false };
+  if (tag) findQuery.tags = tag;
+  if (query) findQuery.title = new RegExp(query, "i");
+  if (author) findQuery.author = author;
+  if (eliminate_blog) findQuery.blog_id = { $ne: eliminate_blog };
 
-  let maxLimit = limit || 4;
+  const maxLimit = limit || 4;
 
   try {
-      // Fetch data from the database
       const blogs = await Blog.find(findQuery)
-          .populate(
-              "author",
-              "personal_info.profile_img personal_info.username personal_info.fullname -_id"
-          )
+          .populate("author", "personal_info.profile_img personal_info.username personal_info.fullname -_id")
           .sort({ publishedAt: -1 })
           .select("blog_id title des banner activity tags publishedAt -_id")
           .skip((page - 1) * maxLimit)
           .limit(maxLimit);
 
-      // Cache the result for subsequent requests (1 hour)
+      // Cache the result
       await redisClient.setEx(req.cacheKey, 3600, JSON.stringify(blogs));
 
       return res.status(200).json({ blogs });
@@ -107,20 +101,15 @@ const searchBlogs = async (req, res) => {
 const searchBlogsCount = async (req, res) => {
   const { tag, author, query } = req.body;
 
-  let findQuery;
-  if (tag) {
-      findQuery = { tags: tag, draft: false };
-  } else if (query) {
-      findQuery = { draft: false, title: new RegExp(query, 'i') };
-  } else if (author) {
-      findQuery = { draft: false, author };
-  }
+  let findQuery = { draft: false };
+  if (tag) findQuery.tags = tag;
+  if (query) findQuery.title = new RegExp(query, "i");
+  if (author) findQuery.author = author;
 
   try {
-      // Fetch the count from the database
       const count = await Blog.countDocuments(findQuery);
 
-      // Cache the result for subsequent requests (1 hour)
+      // Cache the result
       await redisClient.setEx(req.cacheKey, 3600, JSON.stringify({ totalDocs: count }));
 
       return res.status(200).json({ totalDocs: count });
@@ -129,6 +118,7 @@ const searchBlogsCount = async (req, res) => {
       return res.status(500).json({ error: err.message });
   }
 };
+
 
 const createBlogController = async (req, res) => {
     const authorId = req.user;

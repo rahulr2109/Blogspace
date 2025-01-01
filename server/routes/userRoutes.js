@@ -1,5 +1,6 @@
 import express from 'express';  
-import { signupController, signinController, googleauthController, getProfileController, searchUsersController, isLikedByUserController } from '../controllers/userController.js';
+import { signupController, signinController, googleauthController, getProfileController, searchUsersController, isLikedByUserController,changePasswordController, updateProfileImgController, updateProfileController
+ } from '../controllers/userController.js';
 import cacheMiddleware from '../middlewares/cacheMiddleware.js';
 import verifyJWT from '../middlewares/verifyJWTMiddleware.js';
 
@@ -15,6 +16,9 @@ router.post(
     cacheMiddleware((req) => `searchUsers:query:${req.body.query}`),
     searchUsersController
 );
-router.post('/isliked-by-user', verifyJWT, isLikedByUserController);
+router.post("/isliked-by-user", verifyJWT, isLikedByUserController);
+router.post("/change-password", verifyJWT, changePasswordController);
+router.post("/update-profile-img", verifyJWT, updateProfileImgController);
+router.post("/update-profile", verifyJWT, updateProfileController);
 
 export default router;

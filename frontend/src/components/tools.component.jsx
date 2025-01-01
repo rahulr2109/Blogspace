@@ -23,7 +23,7 @@ const uploadImageByUrl = async (url) => {
   }
 };
 
-const uploadImageByFile = async (file) => {
+ export const uploadImageByFile = async (file) => {
   const data = new FormData();
   data.append("file", file);
   data.append("upload_preset", "blogging app");

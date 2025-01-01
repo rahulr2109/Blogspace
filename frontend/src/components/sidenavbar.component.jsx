@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { NavLink, Navigate, Outlet } from "react-router-dom";
 import { UserContext } from "../App";
 
@@ -7,25 +7,32 @@ const SideNavBar = () => {
     userAuth: { access_token },
   } = useContext(UserContext);
 
-  let [pageState, setPageState] = useState();
+  let page = location.pathname.split("/")[2];
+
+  let [pageState, setPageState] = useState(page.replace("-", " "));
   let [showSideNav, setShowSideNav] = useState(false);
 
   let activeTabLine = useRef();
   let sideBarIconTab = useRef();
   let pageStateTab = useRef();
 
-  const changePageState = () => {
+  const changePageState = (e) => {
     let { offsetWidth, offsetLeft } = e.target;
     
     activeTabLine.current.style.width = `${offsetWidth}px`;
     activeTabLine.current.style.left = `${offsetLeft}px`;
 
-    if(e.target == sideBarIconTab){
+    if(e.target == sideBarIconTab.current){
       setShowSideNav(true);
     } else {
       setShowSideNav(false);
     }
   }
+
+  useEffect( () => {
+    setShowSideNav(false);
+    pageStateTab.current.click();
+  },[pageState]);
 
 
 
@@ -39,18 +46,18 @@ const SideNavBar = () => {
 
           <div className="md:hidden bg-white py-1 border-b border-grey flex flex-norap overflow-x-auto">
 
-            <button ref={sideBarIconTab} className="p-5 capitalize">
+            <button ref={sideBarIconTab} className="p-5 capitalize" onClick={changePageState}>
               <i className="fi fi-rr-bars-staggered pointer-events-none"></i>
             </button>
 
-            <button ref={pageStateTab} className="p-5 capitalize">
+            <button ref={pageStateTab} className="p-5 capitalize" onClick={changePageState}>
               {pageState}
             </button>
 
             <hr ref={activeTabLine} className="absolute botton-0 duration-500" />
           </div>
 
-          <div className="min-w-[200px] h-cover md:sticky top-24 overflow-y-auto p-6 md:pr-0 md:border-grey md:border-r absolute max-md:top-[64px] bg-white max-md:w-[calc(100%+80px)] max-md:px-16 max-md:-ml-7 duration-500 ">
+          <div className={"min-w-[200px] h-[calc(100vh-80px-60px)] md:h-cover  md:sticky top-24 overflow-y-auto p-6 md:pr-0 md:border-grey md:border-r absolute max-md:top-[64px] bg-white max-md:w-[calc(100%+80px)] max-md:px-16 max-md:-ml-7 duration-500 " + (!showSideNav ? "max-md::opacity-0 max-md:pointer-events-none" : "opacity-100 pointer-events-auto")}>
             <h1 className="text-xl text-dark-grey mb-3">Dashboard</h1>
             <hr className="border-grey -ml-6 mb-8 mr-6" />
 

@@ -1,6 +1,5 @@
 import express from "express";
 import "dotenv/config";
-import jwt from "jsonwebtoken";
 import cors from "cors";
 import admin from "firebase-admin";
 import userRouter from "./routes/userRoutes.js";

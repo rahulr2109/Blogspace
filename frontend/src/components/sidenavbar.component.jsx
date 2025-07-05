@@ -4,7 +4,7 @@ import { UserContext } from "../App";
 
 const SideNavBar = () => {
   let {
-    userAuth: { access_token },
+    userAuth: { access_token, new_notification_available }, 
   } = useContext(UserContext);
 
   let page = location.pathname.split("/")[2];
@@ -63,7 +63,7 @@ const SideNavBar = () => {
 
             <NavLink
               to="/dashboard/blogs"
-              onClick={(e) => setPage(e.target.innerText)}
+              onClick={(e) => setPageState(e.target.innerText)}
               className="sidebar-link "
             >
               <i className="fi fi-rr-document"></i>
@@ -72,16 +72,22 @@ const SideNavBar = () => {
 
             <NavLink
               to="/dashboard/notification"
-              onClick={(e) => setPage(e.target.innerText)}
+              onClick={(e) => setPageState(e.target.innerText)}
               className="sidebar-link "
             >
+              <div className="relative">
               <i className="fi fi-rr-bells"></i>
+              {
+                new_notification_available ? 
+                <span className="bg-red w-2 h-2 rounded-full absolute z-10 top-0 right-0"></span> : ""
+              }
+              </div>
               Notification
             </NavLink>
 
             <NavLink
               to="/editor"
-              onClick={(e) => setPage(e.target.innerText)}
+              onClick={(e) => setPageState(e.target.innerText)}
               className="sidebar-link "
             >
               <i className="fi fi-rr-file-edit"></i>
@@ -93,7 +99,7 @@ const SideNavBar = () => {
 
             <NavLink
               to="/settings/edit-profile"
-              onClick={(e) => setPage(e.target.innerText)}
+              onClick={(e) => setPageState(e.target.innerText)}
               className="sidebar-link "
             >
               <i className="fi fi-rr-user"></i>
@@ -102,7 +108,7 @@ const SideNavBar = () => {
 
             <NavLink
               to="/settings/change-password"
-              onClick={(e) => setPage(e.target.innerText)}
+              onClick={(e) => setPageState(e.target.innerText)}
               className="sidebar-link "
             >
               <i className="fi fi-rr-lock"></i>

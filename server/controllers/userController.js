@@ -3,7 +3,7 @@ import Notification from "../Schema/Notification.js";
 import bcrypt from "bcrypt";
 import { generateUsername, formatDataToSend } from "../utils/utils.js";
 import { getAuth } from "firebase-admin/auth";
-import redisClient from "../config/redisClient.js";
+//import redisClient from "../config/redisClient.js";
 
 let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
 let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password
@@ -185,7 +185,7 @@ const searchUsersController = async (req, res) => {
             .limit(50);
 
         // Cache the result for subsequent requests (1 hour)
-        await redisClient.setEx(req.cacheKey, 3600, JSON.stringify({ users }));
+        //await redisClient.setEx(req.cacheKey, 3600, JSON.stringify({ users }));
 
         return res.status(200).json({ users });
     } catch (err) {

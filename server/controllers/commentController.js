@@ -1,7 +1,7 @@
 import Blog from "../Schema/Blog.js";
 import Comment from "../Schema/Comment.js";
 import Notification from "../Schema/Notification.js";
-import redisClient from "../config/redisClient.js";
+//import redisClient from "../config/redisClient.js";
 
 const addCommentController = async (req, res) => {
   const user_id = req.user;
@@ -90,9 +90,9 @@ const getBlogCommentsController = async (req, res) => {
       .sort({ commentedAt: -1 });
 
     // Cache the fetched data in Redis
-    await redisClient.set(req.cacheKey, JSON.stringify(comments), {
-      EX: 3600, // Set an expiry of 1 hour
-    });
+    // await redisClient.set(req.cacheKey, JSON.stringify(comments), {
+    //   EX: 3600, // Set an expiry of 1 hour
+    // });
 
     return res.status(200).json(comments);
   } catch (err) {
@@ -124,9 +124,9 @@ const getRepliesController = async (req, res) => {
       .select("children");
 
     // Cache the fetched data in Redis
-    await redisClient.set(req.cacheKey, JSON.stringify(doc[0].children), {
-      EX: 3600, // Set expiry time to 1 hour
-    });
+    // await redisClient.set(req.cacheKey, JSON.stringify(doc[0].children), {
+    //   EX: 3600, // Set expiry time to 1 hour
+    // });
 
     return res.status(200).json({ replies: doc[0].children });
   } catch (err) {
@@ -136,64 +136,58 @@ const getRepliesController = async (req, res) => {
 };
 
 
-// Delete comment and associated data
 const deleteComments = async (_id, skip = 0) => {
   try {
-    const comment = await Comment.findOneAndDelete({ _id });
+    const queue = [_id];
+    while (queue.length) {
+      const currentId = queue.pop();
+      const comment = await Comment.findOneAndDelete({ _id: currentId });
 
-    if (comment) {
-      // If the comment has a parent, remove it from the parent's children array
-      if (comment.parent) {
-        await Comment.findOneAndUpdate(
-          { _id: comment.parent },
-          { $pull: { children: _id } }
+      if (comment) {
+        // Handle parent-child relationships and notifications
+        if (comment.parent) {
+          await Comment.findOneAndUpdate(
+            { _id: comment.parent },
+            { $pull: { children: currentId } }
+          );
+        }
+        await Notification.deleteMany({ $or: [{ comment: currentId }, { reply: currentId }] });
+        await Blog.findOneAndUpdate(
+          { _id: comment.blog_id },
+          {
+            $pull: { comments: currentId },
+            $inc: { "activity.total_comments": -1 },
+            "activity.total_parent_comments": comment.parent ? 0 : -1,
+          }
         );
-        console.log("Comment deleted from parent");
+        // Add children to the queue for deletion
+        queue.push(...comment.children);
       }
 
-      // Delete associated notifications
-      await Notification.findOneAndDelete({ comment: _id });
-      console.log("Comment notification deleted");
-
-      await Notification.findOneAndDelete({ reply: _id });
-      console.log("Reply notification deleted");
-
-      // Update the blog by removing the comment and adjusting the activity counts
-      await Blog.findOneAndUpdate(
-        { _id: comment.blog_id },
-        {
-          $pull: { comments: _id },
-          $inc: { "activity.total_comments": -1 },
-          "activity.total_parent_comments": comment.parent ? 0 : -1,
-        }
-      );
-
-      // Recursively delete any children comments
-      if (comment.children.length) {
-        for (let reply of comment.children) {
-          await deleteComments(reply);
-        }
-      }
-
-      // Invalidate cache for the blog's comments
-      await redisClient.del(`getBlogComments:blogId:${comment.blog_id}:skip:${skip}`);
-
+      // Invalidate cache
+      //await redisClient.del(`getBlogComments:blogId:${comment.blog_id}:skip:${skip}`);
     }
   } catch (err) {
     console.error(err.message);
   }
 };
 
+
 // Controller for deleting a comment
 const deleteCommentController = async (req, res) => {
     const user_id = req.user;
     const { _id } = req.body;
 
+    console.log("comment_id from server: ", _id)
+    console.log("user_id from server: ",  user_id)
+    
     try {
     const comment = await Comment.findOne({ _id });
 
     if (comment) {
       // Check if the user is authorized to delete the comment
+      console.log("comment.commented_by: "+comment.commented_by)
+      console.log("comment.blog_author: "+comment.blog_author)
       if (user_id === comment.commented_by || user_id === comment.blog_author) {
         await deleteComments(_id);
         return res.status(200).json({ status: "Comment deleted" });

@@ -1,7 +1,7 @@
 import Blog from "../Schema/Blog.js";
 import User from "../Schema/User.js";
 import Notification from "../Schema/Notification.js";
-import redisClient from "../config/redisClient.js"
+//import redisClient from "../config/redisClient.js"
 import { nanoid } from "nanoid";
 
 const fetchLatestBlogs = async (req, res) => {
@@ -21,9 +21,9 @@ const fetchLatestBlogs = async (req, res) => {
             .limit(maxLimit);
 
         // Cache the result for subsequent requests
-        await redisClient.set(req.cacheKey, JSON.stringify(blogs), {
-            EX: 3600, // Cache expires in 1 hour
-        });
+        // await redisClient.set(req.cacheKey, JSON.stringify(blogs), {
+        //     EX: 3600, // Cache expires in 1 hour
+        // });
 
         return res.status(200).json({ blogs });
     } catch (err) {
@@ -89,7 +89,7 @@ const searchBlogs = async (req, res) => {
           .limit(maxLimit);
 
       // Cache the result
-      await redisClient.setEx(req.cacheKey, 3600, JSON.stringify(blogs));
+      //await redisClient.setEx(req.cacheKey, 3600, JSON.stringify(blogs));
 
       return res.status(200).json({ blogs });
   } catch (err) {
@@ -110,7 +110,7 @@ const searchBlogsCount = async (req, res) => {
       const count = await Blog.countDocuments(findQuery);
 
       // Cache the result
-      await redisClient.setEx(req.cacheKey, 3600, JSON.stringify({ totalDocs: count }));
+      //await redisClient.setEx(req.cacheKey, 3600, JSON.stringify({ totalDocs: count }));
 
       return res.status(200).json({ totalDocs: count });
   } catch (err) {

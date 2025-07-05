@@ -1,7 +1,7 @@
 import express from 'express';  
 import { signupController, signinController, googleauthController, getProfileController, searchUsersController, isLikedByUserController,changePasswordController, updateProfileImgController, updateProfileController
  } from '../controllers/userController.js';
-import cacheMiddleware from '../middlewares/cacheMiddleware.js';
+//import cacheMiddleware from '../middlewares/cacheMiddleware.js';
 import verifyJWT from '../middlewares/verifyJWTMiddleware.js';
 
 
@@ -13,7 +13,7 @@ router.post("/google-auth", googleauthController);
 router.post("/get-profile", getProfileController);
 router.post(
     "/search-users",
-    cacheMiddleware((req) => `searchUsers:query:${req.body.query}`),
+    //cacheMiddleware((req) => `searchUsers:query:${req.body.query}`),
     searchUsersController
 );
 router.post("/isliked-by-user", verifyJWT, isLikedByUserController);

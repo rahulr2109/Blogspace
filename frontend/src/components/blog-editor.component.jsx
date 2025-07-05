@@ -15,6 +15,7 @@ const BlogEditor = () => {
     blog,
     blog: { title, banner, content, tags, des },
     setBlog,
+    textEditor,
     setTextEditor,
     editorState,
     setEditorState,
@@ -141,7 +142,7 @@ const BlogEditor = () => {
 
         axios
           .post(
-            `${import.meta.env.VITE_SERVER_DOMAIN}/create-blog`,
+            `${import.meta.env.VITE_SERVER_DOMAIN}/api/blog/create-blog`,
             { ...blogObj, id: blog_id },
             {
               headers: {

@@ -12,6 +12,7 @@ import BlogPage from "./pages/blog.page";
 import SideNavBar from "./components/sidenavbar.component";
 import ChangePassword from "./pages/change-password.page";
 import EditProfilePage from "./pages/edit-profile.page";
+import NotificationPage from "./pages/notifications.page";
 
 export const UserContext = createContext({});
 
@@ -41,6 +42,12 @@ const App = () => {
             <Route
               path="change-password"
               element={<ChangePassword/>}
+            />
+          </Route>
+          <Route path="dashboard" element={<SideNavBar />}>
+            <Route
+              path="notification"
+              element={<NotificationPage />}
             />
           </Route>
           <Route path="signin" element={<UserAuthForm type="sign-in" />} />

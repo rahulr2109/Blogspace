@@ -1,14 +1,14 @@
 import express from 'express';
 import { fetchLatestBlogs, fetchTrendingBlogs, fetchAllLatestBlogsCount, searchBlogs, searchBlogsCount, createBlogController, getBlogController, likeBlogController } from '../controllers/blogController.js';
-import cacheMiddleware from '../middlewares/cacheMiddleware.js';
+//import cacheMiddleware from '../middlewares/cacheMiddleware.js';
 import verifyJWT from '../middlewares/verifyJWTMiddleware.js';
-import { searchBlogsCacheKeyGenerator, searchBlogsCountCacheKeyGenerator } from '../utils/cacheKeyGenerators.js';
+//import { searchBlogsCacheKeyGenerator, searchBlogsCountCacheKeyGenerator } from '../utils/cacheKeyGenerators.js';
 
 const router = express.Router();
 
 router.post(
     "/latest-blogs",
-    cacheMiddleware((req) => `latestBlogs:page:${req.body.page}`),
+    //cacheMiddleware((req) => `latestBlogs:page:${req.body.page}`),
     fetchLatestBlogs);
 
 router.get(
@@ -21,12 +21,13 @@ router.post(
 
 router.post(
     "/search-blogs", 
-    cacheMiddleware(searchBlogsCacheKeyGenerator), 
+    //cacheMiddleware(searchBlogsCacheKeyGenerator), 
     searchBlogs);
 
 router.post(
     "/search-blogs-count", 
-    cacheMiddleware(searchBlogsCountCacheKeyGenerator), searchBlogsCount);
+    //cacheMiddleware(searchBlogsCountCacheKeyGenerator), 
+    searchBlogsCount);
 
 router.post(
     '/create-blog', 

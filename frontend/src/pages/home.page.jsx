@@ -17,7 +17,7 @@ const HomePage = () => {
   let [pageState, setPageState] = useState("home");
 
   // blogs = {
-  //   results : [ {},{},{} ],
+  //   results : { blogs: [{},{},{}] },
   //   page:1,
   //   totalDocs:10
   // }
@@ -39,8 +39,6 @@ const HomePage = () => {
         page,
       })
       .then(async ({ data }) => {
-        //console.log(data.blogs);
-
         let formatedData = await filterPaginationData({
           state: blogs,
           data: data,
@@ -48,10 +46,12 @@ const HomePage = () => {
           countRoute: "/api/blog/all-latest-blogs-count",
         });
 
+        //console.log("Formatted data:", formatedData);
         setBlogs(formatedData);
       })
       .catch((err) => {
-        toast.error(err);
+        //console.error("Error fetching latest blogs:", err);
+        toast.error("Failed to fetch latest blogs");
       });
   };
 
@@ -70,10 +70,12 @@ const HomePage = () => {
           data_to_send: { tag: pageState },
         });
 
+        //console.log("Formatted data (category):", formatedData);
         setBlogs(formatedData);
       })
       .catch((err) => {
-        toast.error(err);
+        //console.error("Error fetching blogs by category:", err);
+        toast.error("Failed to fetch blogs by category");
       });
   };
 
@@ -81,11 +83,12 @@ const HomePage = () => {
     axios
       .get(import.meta.env.VITE_SERVER_DOMAIN + "/api/blog/trending-blogs")
       .then(({ data }) => {
-        //console.log(data);
+        //console.log("Trending blogs data:", data);
         setTrendingBlogs(data.blogs);
       })
       .catch((err) => {
-        toast.error(err);
+        //console.error("Error fetching trending blogs:", err);
+        toast.error("Failed to fetch trending blogs");
       });
   };
 
@@ -114,7 +117,10 @@ const HomePage = () => {
     }
   }, [pageState]);
 
-  //console.log(blogs.results.length);
+  // Debug useEffect to monitor blogs state changes
+  useEffect(() => {
+    //console.log("Blogs state updated:", blogs);
+  }, [blogs]);
 
   return (
     <AnimationWrapper>
@@ -129,8 +135,8 @@ const HomePage = () => {
             <>
               {blogs == null ? (
                 <Loader />
-              ) : blogs.results.length ? (
-                blogs.results.map((blog, i) => {
+              ) : blogs.results && blogs.results.blogs && blogs.results.blogs.length ? (
+                blogs.results.blogs.map((blog, i) => {
                   return (
                     <AnimationWrapper
                       key={i}
@@ -146,12 +152,16 @@ const HomePage = () => {
               ) : (
                 <NoDataMessage message="No blogs published" />
               )}
-              <LoadMoreDataBtn
-                state={blogs}
-                fetchDataFun={
-                  pageState == "home" ? fetchLatestBlog : fetchBlogsByCategory
-                }
-              />
+              
+              {/* Load More Button */}
+              {blogs && blogs.results && blogs.results.blogs && (
+                <LoadMoreDataBtn
+                  state={blogs}
+                  fetchDataFun={
+                    pageState == "home" ? fetchLatestBlog : fetchBlogsByCategory
+                  }
+                />
+              )}
             </>
             <>
               {trendingBlogs == null ? (
@@ -175,7 +185,6 @@ const HomePage = () => {
         </div>
 
         {/* filters and trending blogs */}
-
         <div className="min-w[40%] lg:min-w-[400px] max-w-min border-l border-grey pl-8 pt-3 max-md:hidden">
           <div className="flex flex-col gap-10">
             {/*Filter*/}
@@ -203,7 +212,6 @@ const HomePage = () => {
             </div>
 
             {/*Trending*/}
-
             <div>
               <h1 className="font-medium text-xl mb-8">
                 Trending

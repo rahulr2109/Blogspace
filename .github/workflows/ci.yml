@@ -1,4 +1,4 @@
-name: CI for Rahul Branch
+name: CI for main Branch
 
 on:
   push:
@@ -13,34 +13,68 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run linter
+      # Frontend CI
+      - name: Install frontend dependencies
         run: |
-          if [ -f package.json ] && npm run | grep -q "lint"; then
+          cd frontend
+          npm install
+
+      - name: Lint frontend
+        run: |
+          cd frontend
+          if npm run | grep -q "lint"; then
             npm run lint
           else
-            echo "No lint script found. Skipping linting."
+            echo "No lint script found for frontend"
           fi
 
-      - name: Run tests (optional)
+      - name: Test frontend
         run: |
-          if [ -f package.json ] && npm run | grep -q "test"; then
+          cd frontend
+          if npm run | grep -q "test"; then
             npm test
           else
-            echo "No test script found. Skipping tests."
+            echo "No test script found for frontend"
           fi
 
-      - name: Build project
+      - name: Build frontend
         run: |
-          if [ -f package.json ] && npm run | grep -q "build"; then
+          cd frontend
+          if npm run | grep -q "build"; then
             npm run build
           else
-            echo "No build script found. Skipping build."
+            echo "No build script found for frontend"
+          fi
+
+      # Server CI
+      - name: Install server dependencies
+        run: |
+          cd server
+          npm install
+
+      - name: Lint server
+        run: |
+          cd server
+          if npm run | grep -q "lint"; then
+            npm run lint
+          else
+            echo "No lint script found for server"
+          fi
+
+      - name: Test server
+        run: |
+          cd server
+          if npm run | grep -q "test"; then
+            npm test
+          else
+            echo "No test script found for server"
+          fi
+
+      - name: Build server
+        run: |
+          cd server
+          if npm run | grep -q "build"; then
+            npm run build
+          else
+            echo "No build script found for server"
           fi

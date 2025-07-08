@@ -1,0 +1,46 @@
+name: CI for Rahul Branch
+
+on:
+  push:
+    branches:
+      - rahul
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run linter
+        run: |
+          if [ -f package.json ] && npm run | grep -q "lint"; then
+            npm run lint
+          else
+            echo "No lint script found. Skipping linting."
+          fi
+
+      - name: Run tests (optional)
+        run: |
+          if [ -f package.json ] && npm run | grep -q "test"; then
+            npm test
+          else
+            echo "No test script found. Skipping tests."
+          fi
+
+      - name: Build project
+        run: |
+          if [ -f package.json ] && npm run | grep -q "build"; then
+            npm run build
+          else
+            echo "No build script found. Skipping build."
+          fi

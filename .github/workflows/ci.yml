@@ -3,7 +3,7 @@ name: CI for Rahul Branch
 on:
   push:
     branches:
-      - rahul
+      - main
 
 jobs:
   build-and-test:

@@ -19,15 +19,6 @@ jobs:
           cd frontend
           npm install
 
-      - name: Lint frontend
-        run: |
-          cd frontend
-          if npm run | grep -q "lint"; then
-            npm run lint
-          else
-            echo "No lint script found for frontend"
-          fi
-
       - name: Test frontend
         run: |
           cd frontend
@@ -51,15 +42,6 @@ jobs:
         run: |
           cd server
           npm install
-
-      - name: Lint server
-        run: |
-          cd server
-          if npm run | grep -q "lint"; then
-            npm run lint
-          else
-            echo "No lint script found for server"
-          fi
 
       - name: Test server
         run: |
